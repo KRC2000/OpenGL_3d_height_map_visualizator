@@ -22,8 +22,11 @@
     <Filter Include="Shaders\NormalDrawing">
       <UniqueIdentifier>{9bfa0aa0-e776-4792-9644-b21661a59e63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Utility">
+    <Filter Include="3rdPartUtility">
       <UniqueIdentifier>{25525085-e16c-449c-8785-e126d2903181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{3888440e-d904-4753-8849-e5915234dd01}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,10 +34,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp">
-      <Filter>Source Files\Utility</Filter>
+      <Filter>3rdPartUtility</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
-      <Filter>Source Files\Utility</Filter>
+      <Filter>3rdPartUtility</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
       <Filter>ImGUI</Filter>
@@ -59,17 +62,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GlobalVars.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>Source Files\Utility</Filter>
+      <Filter>3rdPartUtility</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
       <Filter>ImGUI</Filter>
@@ -95,20 +92,26 @@
     <ClInclude Include="imstb_truetype.h">
       <Filter>ImGUI</Filter>
     </ClInclude>
+    <ClInclude Include="OBJ_Loader.h">
+      <Filter>3rdPartUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
     <ClInclude Include="HeightMap.h">
-      <Filter>Header Files</Filter>
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="3.3.heightmap.frag">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="3.3.heightmap.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="3.3.heightmap.geom">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\3.3.heightmap_normal.frag">
       <Filter>Shaders\NormalDrawing</Filter>
     </None>
@@ -117,6 +120,15 @@
     </None>
     <None Include="Shaders\3.3.heightmap_normal.vert">
       <Filter>Shaders\NormalDrawing</Filter>
+    </None>
+    <None Include="Shaders\3.3.heightmap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\3.3.heightmap.geom">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Shaders\3.3.heightmap.vert">
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

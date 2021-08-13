@@ -2,13 +2,12 @@
 
 #include <glad/glad.h>
 #include <glfw3.h>
-#include "stb_image.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <assimp/Importer.hpp>
+
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -17,7 +16,8 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "HeightMap.h"
-
+#include "Mesh.h"
+#include "ModelLoader.h"
 
 #include "GlobalVars.h"
 
@@ -29,7 +29,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 
 
-
 float deltaTime = 0.0f;	// Time between current frame and last frame
 float lastFrame = 0.0f; // Time of last frame
 
@@ -38,7 +37,7 @@ float lastFrame = 0.0f; // Time of last frame
 
 float currentFrame = 0;
 
-Camera cam;
+fwork::Camera cam;
 
 int main()
 {
@@ -73,9 +72,21 @@ int main()
 		return -1;
 	}
 
+	
 
-	//HeightMap map("map.tga", "3.3.heightmap.vert", "3.3.heightmap.frag");
-	HeightMap map("map.tga", "Shaders");
+	fwork::HeightMap map("map.tga", "Shaders");
+
+
+	fwork::Shader shader;
+	fwork::Mesh* mesh = nullptr;
+
+	fwork::ModelLoader mLoader;
+	mLoader.loadModel("model.obj");
+
+	mesh = new fwork::Mesh(mLoader.getVertices()[0], mLoader.getVertices().size());
+	mesh->setupIndices(mLoader.getIndices()[0], mLoader.getIndices().size());
+
+	
 
 
 
@@ -124,26 +135,14 @@ int main()
 
 		map.draw(cam);
 
+		shader.use();
+		cam.applyCamera(shader.ID);
+		mesh->draw();
 
-		 // render your GUI
-		ImGui::Begin("Settings");
-		ImGui::Text("'Left-Alt' to switch cursor mode");
-		ImGui::BulletText(("X: " + std::to_string(cam.cameraPos.x)).c_str());
-		ImGui::BulletText(("Y: " + std::to_string(cam.cameraPos.y)).c_str());
-		ImGui::BulletText(("Z: " + std::to_string(cam.cameraPos.z)).c_str());
-		ImGui::SliderFloat("Height multiplier", &map.heightMultiplier, 0.00001f, 20.0f, "%.6f");
-		ImGui::Checkbox("Wireframe mode", &map.wireframe);
-		ImGui::Checkbox("Textured", &map.textured);
-		ImGui::Checkbox("Normals", &map.normals);
-		if (map.normals) ImGui::SliderFloat("Normal length", &map.normalLength, 0.01, 3);
-		ImGui::Checkbox("Light", &map.light);
 
-		ImGui::Text("'Left-Alt' for free camera");
-		//float col1[3] = { 1.0f, 0.0f, 0.2f };
-		ImGui::ColorEdit3("color 1", &map.targetColor[0]);
+		
 
-		ImGui::ShowDemoWindow();
-		ImGui::End();
+		
 
 		// Render dear imgui into screen
 		ImGui::Render();
@@ -220,105 +219,3 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-// Loads TGA image data, creates array with only green channel and returns it.
-// Param-s "with" and "height" will be filled with picture size
-unsigned char* loadHeightMap(std::string path, int& width, int& height)
-{
-	int nrChannels;
-	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrChannels, 3);
-	if (data)
-	{
-		// Creating separate data arr with only Green channel
-		int g_dataSize = width * height;
-		unsigned char* g_data = new  unsigned char[g_dataSize];
-
-		unsigned int g_dataIterator = 0;
-		for (int i = 1; i < g_dataSize; i+=3)
-		{
-			g_data[g_dataIterator] = data[i];
-			g_dataIterator++;
-		}
-		return g_data;
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-}
-
-float* genHeightMapPlane(unsigned int* &drawIndices, unsigned int map_width, unsigned int map_height, int freq, int& returnArr_size, int& indicesAmount)
-{
-	int vertWith = (freq != 0) ? freq + 1 : map_width;
-	int vertHeight = (freq != 0) ? freq + 1 : map_height;
-	int vertAmount = vertWith * vertHeight;
-
-
-	// Creating array of needed size
-	returnArr_size = vertAmount * 3;
-	float* vertices = vertices = new float[vertAmount*3];
-
-	float widthStep = 2.f / (vertWith-1);
-	float heightStep = 2.f / (vertHeight-1);
-
-	// Filling array with vertices positions, not ready to draw because points aren't in triangle sequence
-	int vert_i = 0;
-	for (int z = 0; z < vertHeight; z++)
-	{
-		for (int x = 0; x < vertWith; x++)
-		{
-			vertices[vert_i] = -1.f + x * widthStep;
-			vertices[vert_i + 1] = 0.f;
-			vertices[vert_i + 2] = 1.f + z * -heightStep;
-
-			//std::cout << vertices[vert_i] << " " << vertices[vert_i +1] << " " << vertices[vert_i +2] << std::endl;
-
-			vert_i += 3;
-		}
-	}
-	//std::cout << std::endl;
-	// Indices for upper-left triangles
-	//  *---*
-	//  |  /
-	//  | /
-	//  |/
-	//  *
-	indicesAmount = freq * freq * 6;
-	drawIndices = new unsigned int[indicesAmount];
-	int ind_i = 0;
-	for (int y = 0; y < vertHeight - 1; y++)
-	{
-		for (int x = 0; x < vertWith - 1; x++)
-		{
-			drawIndices[ind_i] = y * vertWith + x;
-			drawIndices[ind_i + 1] = y * vertWith + x + 1;
-			drawIndices[ind_i + 2] = y * vertWith + x + vertWith;
-
-			//std::cout << drawIndices[ind_i] << " " << drawIndices[ind_i+1] << " " << drawIndices[ind_i+2] << std::endl;
-			ind_i += 3;
-		}
-	}
-	
-	//std::cout << std::endl;
-
-	// Indices for down-right triangles
-	//      *
-	//     /|
-	//    / |
-	//   /  |
-	//  *---*
-	for (int y = 0; y < vertHeight - 1; y++)
-	{
-		for (int x = 1; x < vertWith; x++)
-		{
-			drawIndices[ind_i] = y * vertWith + x;
-			drawIndices[ind_i + 1] = y * vertWith + x + vertWith;
-			drawIndices[ind_i + 2] = y * vertWith + x + vertWith - 1;
-			//std::cout << drawIndices[ind_i] << " " << drawIndices[ind_i + 1] << " " << drawIndices[ind_i + 2] << std::endl;
-			ind_i += 3;
-		}
-	}
-
-	return vertices;
-}

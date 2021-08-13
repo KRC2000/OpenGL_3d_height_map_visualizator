@@ -167,13 +167,16 @@
     <ClInclude Include="imstb_rectpack.h" />
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="ModelLoader.h" />
+    <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="3.3.heightmap.frag" />
-    <None Include="3.3.heightmap.geom" />
-    <None Include="3.3.heightmap.vert" />
+    <None Include="Shaders\3.3.heightmap.frag" />
+    <None Include="Shaders\3.3.heightmap.geom" />
+    <None Include="Shaders\3.3.heightmap.vert" />
     <None Include="Shaders\3.3.heightmap_normal.frag" />
     <None Include="Shaders\3.3.heightmap_normal.geom" />
     <None Include="Shaders\3.3.heightmap_normal.vert" />
