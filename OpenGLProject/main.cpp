@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <vector>
 #include <glad/glad.h>
 #include <glfw3.h>
 
@@ -18,6 +18,7 @@
 #include "HeightMap.h"
 #include "Mesh.h"
 #include "ModelLoader.h"
+#include "TextureManager.h"
 
 #include "GlobalVars.h"
 
@@ -75,20 +76,34 @@ int main()
 	
 
 	fwork::HeightMap map("map.tga", "Shaders");
-
+	
+	std::string resDir = "Models/";
 
 	fwork::Shader shader;
 	fwork::Mesh* mesh = nullptr;
-
 	fwork::ModelLoader mLoader;
-	mLoader.loadModel("model.obj");
+	fwork::TextureManager texManager;
 
-	mesh = new fwork::Mesh(mLoader.getVertices()[0], mLoader.getVertices().size());
-	mesh->setupIndices(mLoader.getIndices()[0], mLoader.getIndices().size());
+
+	std::vector<float>* vertices = new std::vector<float>;
+	std::vector<unsigned int>* indices = new std::vector<unsigned int>;
+
+	mLoader.loadModel("Models/barrel.obj", *vertices, *indices, true);
+
+	mesh = new fwork::Mesh(*vertices, vertices->size(), true);
+	mesh->setupIndices(*indices, indices->size());
+
+	
+	texManager.loadTexture(resDir + mLoader.getTextureFileName());
+	unsigned int t_id = texManager.getTexture(resDir + mLoader.getTextureFileName());
+
+	mesh->setTexture(t_id);
+
+
 
 	
 
-
+	
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -102,12 +117,13 @@ int main()
 
 
 	glEnable(GL_DEPTH_TEST);
-
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetKeyCallback(window, key_callback);
 
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 
 	// render loop
 	// -----------
@@ -133,11 +149,9 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		map.draw(cam);
+		//map.draw(cam);
 
-		shader.use();
-		cam.applyCamera(shader.ID);
-		mesh->draw();
+		mesh->draw(shader, cam);
 
 
 		

@@ -60,6 +60,9 @@
     <ClCompile Include="imgui_widgets.cpp">
       <Filter>ImGUI</Filter>
     </ClCompile>
+    <ClCompile Include="lodepng.cpp">
+      <Filter>3rdPartUtility</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalVars.h">
@@ -109,6 +112,12 @@
     </ClInclude>
     <ClInclude Include="ModelLoader.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng.h">
+      <Filter>3rdPartUtility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

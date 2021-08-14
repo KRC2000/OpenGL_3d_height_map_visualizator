@@ -1,45 +1,63 @@
 #pragma once
 #include <iostream>
 #include <vector>
+
+#include <glad/glad.h>
+
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+
+#include "stb_image.h"
 
 namespace fwork
 {
 	// Loads vertices and indices of model in vectors. Stores them as long as loadModel() is not being called again.
 	class ModelLoader
 	{
-		std::vector<float> vertices;
-		std::vector<unsigned int> indices;
+		std::string textureName = "";
 
 	public:
 
 		ModelLoader() {}
 
-		void loadModel(std::string path)
+		// param "texCoordsToVert" - must texture coordinates be inserted in "vert" vector
+		void loadModel(std::string path, std::vector<float>& vert, std::vector<unsigned int>& ind, bool texCoordsInVert = false)
 		{
-			vertices.clear();
-			indices.clear();
+			vert.clear();
+			ind.clear();
+			textureName = "";
 
 			Assimp::Importer importer;
 
-			const aiScene* scene = importer.ReadFile("model.obj", aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_JoinIdenticalVertices);
+			const aiScene* scene = importer.ReadFile(path.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs |aiProcess_JoinIdenticalVertices);
 			if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 			{
 				std::cout << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
 			}
 
+			
 
 			for (int i = 0; i < scene->mMeshes[0]->mNumVertices; ++i)
 			{
 				//std::cout << scene->mMeshes[0]->mVertices[i].x << ";  " << scene->mMeshes[0]->mVertices[i].y << ";  " << scene->mMeshes[0]->mVertices[i].z << std::endl;
 
-				vertices.push_back(scene->mMeshes[0]->mVertices[i].x);
-				vertices.push_back(scene->mMeshes[0]->mVertices[i].y);
-				vertices.push_back(scene->mMeshes[0]->mVertices[i].z);
+				vert.push_back(scene->mMeshes[0]->mVertices[i].x);
+				vert.push_back(scene->mMeshes[0]->mVertices[i].y);
+				vert.push_back(scene->mMeshes[0]->mVertices[i].z);
+
+				if (texCoordsInVert && scene->mMeshes[0]->mTextureCoords[0])
+				{
+					vert.push_back(scene->mMeshes[0]->mTextureCoords[0][i].x);
+					vert.push_back(scene->mMeshes[0]->mTextureCoords[0][i].y);
+					//std::cout << scene->mMeshes[0]->mTextureCoords[0][i].x << ";  " << scene->mMeshes[0]->mTextureCoords[0][i].y << std::endl;
+				}
 			}
-			std::cout << "Loaded " << vertices.size() / 3 << " vertices" << std::endl;
+
+			if (texCoordsInVert && scene->mMeshes[0]->mTextureCoords[0])
+				std::cout << "Loaded " << vert.size() / 5 << " vertices with texture coordinates" << std::endl;
+			else
+				std::cout << "Loaded " << vert.size() / 3 << " vertices" << std::endl;
 
 
 			for (unsigned int i = 0; i < scene->mMeshes[0]->mNumFaces; ++i)
@@ -48,20 +66,20 @@ namespace fwork
 				for (unsigned int j = 0; j < face.mNumIndices; ++j)
 				{
 					//std::cout << face.mIndices[j] << std::endl;
-					indices.push_back(face.mIndices[j]);
+					ind.push_back(face.mIndices[j]);
 				}
 			}
-			std::cout << "Loaded " << indices.size() << " indices" << std::endl;
+			std::cout << "Loaded " << ind.size() << " indices" << std::endl;
+
+
+			unsigned int mat_i = scene->mMeshes[0]->mMaterialIndex;
+			aiString t_path;
+			scene->mMaterials[mat_i]->GetTexture(aiTextureType::aiTextureType_DIFFUSE, 0, &t_path);
+			textureName = t_path.C_Str();
+
 		}
 
-		std::vector<float> getVertices()
-		{
-			return vertices;
-		}
+		std::string getTextureFileName() { return textureName; }
 
-		std::vector<unsigned int> getIndices()
-		{
-			return indices;
-		}
 	};
 }

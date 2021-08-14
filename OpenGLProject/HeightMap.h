@@ -51,7 +51,6 @@ namespace fwork
 
 			shader = new fwork::Shader(path_shader_mesh_vert.c_str(), path_shader_mesh_frag.c_str(), path_shader_mesh_geom.c_str());
 			shader_normalsdraw = new fwork::Shader(path_shader_normals_vert.c_str(), path_shader_normals_frag.c_str(), path_shader_normals_geom.c_str());
-			std::cout << path_shader_mesh_vert;
 			loadHeightmapTexture(texture_path);
 
 			vertices_arr = genHeightMapPlane(indices_arr, heightmap_texture_with, heightmap_texture_height, 100, vertices_arr_size, indices_arr_size);
@@ -65,11 +64,11 @@ namespace fwork
 
 			glBindBuffer(GL_ARRAY_BUFFER, id_mapVBO);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices_arr_size, vertices_arr, GL_STATIC_DRAW);
-			std::cout << sizeof(*vertices_arr) * vertices_arr_size << std::endl;
+			
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id_mapEBO);
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices_arr_size, indices_arr, GL_STATIC_DRAW);
-			std::cout << sizeof(*indices_arr) * indices_arr_size << std::endl;
+			
 
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
@@ -128,7 +127,7 @@ namespace fwork
 		void drawUI(fwork::Camera& cam)
 		{
 			// render your GUI
-			ImGui::Begin("Settings");
+			ImGui::Begin("Heightmap settings");
 			ImGui::Text("'Left-Alt' to switch cursor mode");
 			ImGui::BulletText(("X: " + std::to_string(cam.cameraPos.x)).c_str());
 			ImGui::BulletText(("Y: " + std::to_string(cam.cameraPos.y)).c_str());
