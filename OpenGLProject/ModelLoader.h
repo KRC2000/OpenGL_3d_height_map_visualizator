@@ -8,7 +8,6 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "stb_image.h"
 
 namespace fwork
 {
@@ -22,7 +21,7 @@ namespace fwork
 		ModelLoader() {}
 
 		// param "texCoordsToVert" - must texture coordinates be inserted in "vert" vector
-		void loadModel(std::string path, std::vector<float>& vert, std::vector<unsigned int>& ind, bool texCoordsInVert = false)
+		void loadModel(std::string path, std::vector<float>& vert, std::vector<unsigned int>& ind)
 		{
 			vert.clear();
 			ind.clear();
@@ -46,7 +45,7 @@ namespace fwork
 				vert.push_back(scene->mMeshes[0]->mVertices[i].y);
 				vert.push_back(scene->mMeshes[0]->mVertices[i].z);
 
-				if (texCoordsInVert && scene->mMeshes[0]->mTextureCoords[0])
+				if (scene->mMeshes[0]->mTextureCoords[0])
 				{
 					vert.push_back(scene->mMeshes[0]->mTextureCoords[0][i].x);
 					vert.push_back(scene->mMeshes[0]->mTextureCoords[0][i].y);
@@ -54,10 +53,7 @@ namespace fwork
 				}
 			}
 
-			if (texCoordsInVert && scene->mMeshes[0]->mTextureCoords[0])
-				std::cout << "Loaded " << vert.size() / 5 << " vertices with texture coordinates" << std::endl;
-			else
-				std::cout << "Loaded " << vert.size() / 3 << " vertices" << std::endl;
+			std::cout << "Loaded " << vert.size() / 3 << " vertices" << std::endl;
 
 
 			for (unsigned int i = 0; i < scene->mMeshes[0]->mNumFaces; ++i)

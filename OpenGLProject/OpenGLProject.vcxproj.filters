@@ -107,17 +107,17 @@
     <ClInclude Include="HeightMap.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelLoader.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="lodepng.h">
       <Filter>3rdPartUtility</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshManager.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity3d.h">
+      <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

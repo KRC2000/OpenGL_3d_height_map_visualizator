@@ -66,11 +66,11 @@ namespace fwork
 			return t.id;
 		}
 
-		unsigned int getTexture(std::string name)
+		unsigned int getTexture(std::string textureName)
 		{
 			for (Texture& t : textures)
 			{
-				if (t.name == name) return t.id;
+				if (t.name == textureName) return t.id;
 			}
 			std::cout << "TextureManager::Can't get texture with such name!" << std::endl;
 			return 0;

@@ -85,6 +85,7 @@ namespace fwork
 			glBindVertexArray(id_VAO);
 			if (!elements) glDrawArrays(GL_TRIANGLES, 0, vertices_arr_size);
 			else glDrawElements(GL_TRIANGLES, indices_arr_size, GL_UNSIGNED_INT, 0);
+			//glDrawElementsInstanced(GL_TRIANGLES, indices_arr_size, GL_UNSIGNED_INT, 0, 100);
 		}
 
 		void setTexture(unsigned int id) { textured = true; textureId = id; }

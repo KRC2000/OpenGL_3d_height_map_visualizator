@@ -16,8 +16,8 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "HeightMap.h"
-#include "Mesh.h"
-#include "ModelLoader.h"
+#include "Entity3d.h"
+#include "MeshManager.h"
 #include "TextureManager.h"
 
 #include "GlobalVars.h"
@@ -78,30 +78,27 @@ int main()
 	fwork::HeightMap map("map.tga", "Shaders");
 	
 	std::string resDir = "Models/";
+	std::string path = resDir + "barrel.obj";
+
 
 	fwork::Shader shader;
-	fwork::Mesh* mesh = nullptr;
-	fwork::ModelLoader mLoader;
 	fwork::TextureManager texManager;
-
-
-	std::vector<float>* vertices = new std::vector<float>;
-	std::vector<unsigned int>* indices = new std::vector<unsigned int>;
-
-	mLoader.loadModel("Models/barrel.obj", *vertices, *indices, true);
-
-	mesh = new fwork::Mesh(*vertices, vertices->size(), true);
-	mesh->setupIndices(*indices, indices->size());
-
-	
-	texManager.loadTexture(resDir + mLoader.getTextureFileName());
-	unsigned int t_id = texManager.getTexture(resDir + mLoader.getTextureFileName());
-
-	mesh->setTexture(t_id);
+	fwork::MeshManager meshManager;
 
 
 
-	
+	meshManager.loadMesh(path);
+	std::string t_path = resDir + meshManager.getMeshTexturePath(path);
+	texManager.loadTexture(t_path);
+	texManager.loadTexture(resDir + "barrel_t_.png");
+
+	fwork::Entity3d barrel(meshManager.getVAO(path), meshManager.getMeshIndicesAmount(path));
+	barrel.setTexture(texManager.getTexture(t_path));
+
+	fwork::Entity3d barrel1(meshManager.getVAO(path), meshManager.getMeshIndicesAmount(path));
+	barrel1.setTexture(texManager.getTexture(resDir + "barrel_t_.png"));
+
+	barrel1.move(glm::vec3(1, 0, 0));
 
 	
 
@@ -150,10 +147,17 @@ int main()
 		ImGui::NewFrame();
 
 		//map.draw(cam);
+		//mesh->draw(shader, cam);
 
-		mesh->draw(shader, cam);
+		shader.use();
+		cam.applyCamera(shader.ID);
+		shader.setInt("tex", 0);
+		shader.setBool("textured", true);
 
 
+		barrel.draw(shader);
+
+		barrel1.draw(shader);
 		
 
 		
@@ -223,12 +227,15 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS)
+	if (action == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
-		cam.setMouseLook((glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? false : true);
-		(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? 
-			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse : ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+		if (key == GLFW_KEY_LEFT_ALT)
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
+			cam.setMouseLook((glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? false : true);
+			(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ?
+				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse : ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+		}
 	}
 
 }

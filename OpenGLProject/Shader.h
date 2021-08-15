@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 
+
 namespace fwork
 {
 	class Shader
@@ -26,19 +27,19 @@ namespace fwork
 			"   mat4 matrix = projection_mat4 * view_mat4 * model_mat4;\n"
 			"   fragPos = vec3(aPos.x, aPos.y, aPos.z);\n"
 			"	texCoords = aTexCoords;\n"
-			"   gl_Position = matrix * vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+			"   gl_Position = matrix * vec4(aPos.x + gl_InstanceID*2, aPos.y, aPos.z, 1.0);\n"
 			"}\0";
 		const char* defaultFrag = "#version 330 core\n"
 			"out vec4 FragColor;\n"
 			"uniform bool textured = false;\n"
-			"uniform sampler2D t;\n"
+			"uniform sampler2D tex;\n"
 			"in vec3 fragPos;\n"
 			"in vec2 texCoords;\n"
 			"void main()\n"
 			"{\n"
 			"	if (textured)\n"
 			"	{\n"
-			"		vec4 color = texture(t, texCoords);\n"
+			"		vec4 color = texture(tex, texCoords);\n"
 			"		if (color.a == 0) discard;\n"
 			"		FragColor = color; \n"
 			"	}\n"
