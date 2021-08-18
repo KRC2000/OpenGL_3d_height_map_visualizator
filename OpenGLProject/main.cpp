@@ -23,6 +23,7 @@
 #include "ECSManager.h"
 #include "MeshComponent.h"
 #include "TransformComponent.h"
+#include "AxisAlignedBoxComponent.h"
 
 #include "GlobalVars.h"
 
@@ -83,13 +84,17 @@ int main()
 	//std::string path = resDir + "barrel.obj";
 
 
+	fwork::Shader shaderMin("Shaders/3.3.minimal.vert", "Shaders/3.3.minimal.frag");
 	fwork::Shader shader;
 	fwork::TextureManager texManager;
 	fwork::MeshManager meshManager;
 
 	meshManager.loadMesh(resDir + "barrel.obj");
-	std::string t_path = resDir + meshManager.getMeshTexturePath(resDir + "barrel.obj");
-	texManager.loadTexture(t_path);
+	meshManager.loadMesh(resDir + "desk.obj");
+	std::string barrel_t_path = resDir + meshManager.getMeshTexturePath(resDir + "barrel.obj");
+	std::string desk_t_path = resDir + meshManager.getMeshTexturePath(resDir + "desk.obj");
+	texManager.loadTexture(barrel_t_path);
+	texManager.loadTexture(desk_t_path);
 
 
 	ecs::ECSManager ecsManager;
@@ -101,19 +106,27 @@ int main()
 
 		entity->addComponent(ecsManager.newComponent(new ecs::TransformComponent()));
 		entity->addComponent(ecsManager.newComponent(new ecs::MeshComponent()));
+		entity->addComponent(ecsManager.newComponent(new ecs::AxisAlignedBoxComponent()));
 
-		meshManager.setUpMeshComponent(*entity->getFirstComponent<ecs::MeshComponent>(), resDir + "barrel.obj");
-		entity->getFirstComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(t_path));
+		meshManager.setUpMeshComponent(*entity->getComponent<ecs::MeshComponent>(), resDir + "barrel.obj");
+		entity->getComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(barrel_t_path));
+		entity->getComponent<ecs::AxisAlignedBoxComponent>()->init(meshManager.getMeshVertices(resDir + "barrel.obj"), 2);
+		entity->getComponent<ecs::TransformComponent>()->move(entity->getComponent<ecs::AxisAlignedBoxComponent>()->box.getWidth() * (i-1) , 0, 0);
 
-		entity->getFirstComponent<ecs::TransformComponent>()->move( -1 + i, 0, 0);
-
+		//entity->getFirstComponent<ecs::MeshComponent>()->setupDebagDraw();
 		entities.push_back(entity);
 	}
 	
+	Entity* desk = new Entity;
+	desk->addComponent(ecsManager.newComponent(new ecs::TransformComponent()));
+	desk->addComponent(ecsManager.newComponent(new ecs::MeshComponent()));
+	meshManager.setUpMeshComponent(*desk->getComponent<ecs::MeshComponent>(), resDir + "desk.obj");
+	desk->getComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(desk_t_path));
+	desk->getComponent<ecs::TransformComponent>()->scale(1.5, 1.5, 2);
+	entities.push_back(desk);
 	
 
 
-	
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -167,13 +180,24 @@ int main()
 		shader.setInt("tex", 0);
 		shader.setBool("textured", true);
 
-
+		shaderMin.use();
+		cam.applyCamera(shaderMin.ID);
 		
 		for (Entity* entity : entities)
 		{
-			
-			shader.setMat4("model_mat4", entity->getFirstComponent<ecs::TransformComponent>()->transform);
-			entity->getFirstComponent<ecs::MeshComponent>()->draw();
+			shader.use();
+			shader.setMat4("model_mat4", entity->getComponent<ecs::TransformComponent>()->transform);
+			entity->getComponent<ecs::MeshComponent>()->draw();
+			entity->getComponent<ecs::TransformComponent>()->rotate(0.001, 0, 1, 0);
+
+			shaderMin.use();
+			ecs::AxisAlignedBoxComponent* box_c = entity->getComponent<ecs::AxisAlignedBoxComponent>();
+			if (box_c)
+			{
+				shaderMin.setMat4("global_mat4", entity->getComponent<ecs::TransformComponent>()->transform);
+				box_c->draw();
+
+			}
 		}
 
 

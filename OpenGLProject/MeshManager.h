@@ -11,6 +11,7 @@
 #include <assimp/postprocess.h>
 
 #include "MeshComponent.h"
+#include "AlignedBox.h"
 
 namespace fwork
 {
@@ -20,11 +21,16 @@ namespace fwork
 		struct Mesh
 		{
 			unsigned int VBO_id, EBO_id, VAO_id;
-			unsigned int indicesAmount;
+			std::vector<float> vertices;
+			std::vector<unsigned int> indices;
 			std::string name;
 			std::string texPath;
 			bool texCoords;
+			//fwork::AlignedBox box;
 		};
+
+		/*std::vector<float> vertices;
+		std::vector<unsigned int> indices;*/
 
 		std::vector<Mesh> meshes;
 
@@ -37,23 +43,22 @@ namespace fwork
 		{
 			Mesh mesh;
 
-			std::vector<float> vertices;
-			std::vector<unsigned int> indices;
-
+			/*vertices.clear();
+			indices.clear();*/
 
 			Assimp::Importer importer;
 			const aiScene* scene = getSceneObjectRef(path, importer);
 		
 		
-			loadVertsToVec(scene, vertices, mesh.texCoords);
-			loadIndicesToVec(scene, indices);
+			loadVertsToVec(scene, mesh.vertices, mesh.texCoords);
+			loadIndicesToVec(scene, mesh.indices);
 
-
-			createAndLoadBuffers(mesh, vertices, indices);
+			createAndLoadBuffers(mesh, mesh.vertices, mesh.indices);
 
 			mesh.name = path;
 			mesh.texPath = getTexturePath(scene);
-			mesh.indicesAmount = indices.size();
+			//AlignedBox box2(vertices, 2);
+			//mesh.box = box2;
 			
 			meshes.push_back(mesh);
 
@@ -67,8 +72,9 @@ namespace fwork
 				if (mesh.name == meshName)
 				{
 					mesh_c.VAO_id = mesh.VAO_id;
-					mesh_c.indicesAmount = mesh.indicesAmount;
+					mesh_c.indicesAmount = mesh.indices.size();
 					mesh_c.textured = mesh.texCoords;
+					//mesh_c.box = mesh.box;
 				}
 			}
 		}
@@ -94,7 +100,16 @@ namespace fwork
 			return "";
 		}
 
-		unsigned int getMeshIndicesAmount(std::string meshName)
+		// Returns vertices vector copy 
+		std::vector<float> getMeshVertices(std::string meshName)
+		{
+			for (Mesh& mesh : meshes)
+			{
+				if (mesh.name == meshName) return mesh.vertices;
+			}
+		}
+
+		/*unsigned int getMeshIndicesAmount(std::string meshName)
 		{
 			for (Mesh& mesh : meshes)
 			{
@@ -102,7 +117,10 @@ namespace fwork
 			}
 			std::cout << "MeshManager::Can't get indices amount, no mesh with such name\n";
 			return 0;
-		}
+		}*/
+
+		// Returns vector copy!
+		//std::vector<float> getLastLoadedVertices() { return vertices; }
 
 	private:
 
@@ -142,7 +160,6 @@ namespace fwork
 					//std::cout << scene->mMeshes[0]->mTextureCoords[0][i].x << ";  " << scene->mMeshes[0]->mTextureCoords[0][i].y << std::endl;
 				}
 			}
-
 		}
 
 		// Fills vector with indices

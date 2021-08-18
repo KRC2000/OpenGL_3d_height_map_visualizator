@@ -13,7 +13,7 @@ class Entity
 
 public:
 	template<class Ctype>
-	Ctype* getFirstComponent()
+	Ctype* getComponent()
 	{
 		for (Component* c : components)
 		{

@@ -4,10 +4,7 @@ namespace ecs
 {
 	enum class ComponentId
 	{
-		EMPTY, MESH, TRANSFORM
+		EMPTY, MESH, TRANSFORM, AXISALIGNEDBOX
 	};
-	enum class SystemId
-	{
-		EMPTY, DRAW, TRANSFORM
-	};
+
 }

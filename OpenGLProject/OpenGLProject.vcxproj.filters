@@ -137,11 +137,14 @@
     <ClInclude Include="Id.h">
       <Filter>Framework\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="AllignedBox.h">
+    <ClInclude Include="AlignedBox.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="Vec3.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="AxisAlignedBoxComponent.h">
+      <Filter>Framework\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

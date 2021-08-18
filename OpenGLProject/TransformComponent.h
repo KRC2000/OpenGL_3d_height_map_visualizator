@@ -31,5 +31,6 @@ namespace ecs
 		{
 			transform = glm::scale(transform, glm::vec3(factorX, factorY, factorZ));
 		}
+
 	};
 }

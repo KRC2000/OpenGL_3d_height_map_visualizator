@@ -157,7 +157,8 @@
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AllignedBox.h" />
+    <ClInclude Include="AlignedBox.h" />
+    <ClInclude Include="AxisAlignedBoxComponent.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ECSManager.h" />
