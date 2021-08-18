@@ -28,6 +28,9 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{3888440e-d904-4753-8849-e5915234dd01}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Framework\ECS">
+      <UniqueIdentifier>{c02a0b7e-c946-4866-ae51-ac7f3a1287d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,7 +119,28 @@
     <ClInclude Include="MeshManager.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Entity3d.h">
+    <ClInclude Include="MeshComponent.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECSManager.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Id.h">
+      <Filter>Framework\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="AllignedBox.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
       <Filter>Framework</Filter>
     </ClInclude>
   </ItemGroup>

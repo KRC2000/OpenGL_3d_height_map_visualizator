@@ -16,9 +16,13 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "HeightMap.h"
-#include "Entity3d.h"
 #include "MeshManager.h"
 #include "TextureManager.h"
+
+#include "Entity.h"
+#include "ECSManager.h"
+#include "MeshComponent.h"
+#include "TransformComponent.h"
 
 #include "GlobalVars.h"
 
@@ -42,6 +46,8 @@ fwork::Camera cam;
 
 int main()
 {
+	srand(time(NULL));
+
 	// glfw: initialize and configure
 	// ------------------------------
 	glfwInit();
@@ -73,32 +79,39 @@ int main()
 		return -1;
 	}
 
-	
-
-	fwork::HeightMap map("map.tga", "Shaders");
-	
 	std::string resDir = "Models/";
-	std::string path = resDir + "barrel.obj";
+	//std::string path = resDir + "barrel.obj";
 
 
 	fwork::Shader shader;
 	fwork::TextureManager texManager;
 	fwork::MeshManager meshManager;
 
-
-
-	meshManager.loadMesh(path);
-	std::string t_path = resDir + meshManager.getMeshTexturePath(path);
+	meshManager.loadMesh(resDir + "barrel.obj");
+	std::string t_path = resDir + meshManager.getMeshTexturePath(resDir + "barrel.obj");
 	texManager.loadTexture(t_path);
-	texManager.loadTexture(resDir + "barrel_t_.png");
 
-	fwork::Entity3d barrel(meshManager.getVAO(path), meshManager.getMeshIndicesAmount(path));
-	barrel.setTexture(texManager.getTexture(t_path));
 
-	fwork::Entity3d barrel1(meshManager.getVAO(path), meshManager.getMeshIndicesAmount(path));
-	barrel1.setTexture(texManager.getTexture(resDir + "barrel_t_.png"));
+	ecs::ECSManager ecsManager;
 
-	barrel1.move(glm::vec3(1, 0, 0));
+	std::vector<Entity*> entities;
+	for (int i = 0; i < 3; i++)
+	{
+		Entity* entity = new Entity;
+
+		entity->addComponent(ecsManager.newComponent(new ecs::TransformComponent()));
+		entity->addComponent(ecsManager.newComponent(new ecs::MeshComponent()));
+
+		meshManager.setUpMeshComponent(*entity->getFirstComponent<ecs::MeshComponent>(), resDir + "barrel.obj");
+		entity->getFirstComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(t_path));
+
+		entity->getFirstComponent<ecs::TransformComponent>()->move( -1 + i, 0, 0);
+
+		entities.push_back(entity);
+	}
+	
+	
+
 
 	
 
@@ -155,12 +168,14 @@ int main()
 		shader.setBool("textured", true);
 
 
-		barrel.draw(shader);
-
-		barrel1.draw(shader);
 		
+		for (Entity* entity : entities)
+		{
+			
+			shader.setMat4("model_mat4", entity->getFirstComponent<ecs::TransformComponent>()->transform);
+			entity->getFirstComponent<ecs::MeshComponent>()->draw();
+		}
 
-		
 
 		// Render dear imgui into screen
 		ImGui::Render();
@@ -175,7 +190,7 @@ int main()
 
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
-	map.terminate();
+	//map.terminate();
 
 	// glfw: terminate, clearing all previously allocated GLFW resources.
 	// ------------------------------------------------------------------

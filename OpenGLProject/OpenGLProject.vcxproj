@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -157,10 +157,14 @@
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AllignedBox.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Entity3d.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="ECSManager.h" />
+    <ClInclude Include="Entity.h" />
     <ClInclude Include="GlobalVars.h" />
     <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="Id.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
@@ -170,11 +174,14 @@
     <ClInclude Include="imstb_textedit.h" />
     <ClInclude Include="imstb_truetype.h" />
     <ClInclude Include="lodepng.h" />
+    <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TextureManager.h" />
+    <ClInclude Include="TransformComponent.h" />
+    <ClInclude Include="Vec3.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.heightmap.frag" />

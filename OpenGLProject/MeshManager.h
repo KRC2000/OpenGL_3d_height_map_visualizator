@@ -10,6 +10,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include "MeshComponent.h"
+
 namespace fwork
 {
 	class MeshManager
@@ -56,6 +58,19 @@ namespace fwork
 			meshes.push_back(mesh);
 
 			std::cout << "MeshManager::Mesh successfully loaded\n";
+		}
+
+		void setUpMeshComponent(ecs::MeshComponent& mesh_c, std::string meshName)
+		{
+			for (Mesh& mesh : meshes)
+			{
+				if (mesh.name == meshName)
+				{
+					mesh_c.VAO_id = mesh.VAO_id;
+					mesh_c.indicesAmount = mesh.indicesAmount;
+					mesh_c.textured = mesh.texCoords;
+				}
+			}
 		}
 
 		unsigned int getVAO(std::string meshName)
