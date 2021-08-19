@@ -22,10 +22,10 @@ namespace fwork
 		float lastX = SCR_WIDTH / 2, lastY = SCR_HEIGHT / 2;
 
 
-		float forwardMovementSpeed = 1;
-		float strafeMovementSpeed = 1;
-		float backwardMovementSpeed = 1;
-		float upDownMovementSpeed = 1;
+		float forwardMovementSpeed = 2;
+		float strafeMovementSpeed = 2;
+		float backwardMovementSpeed = 2;
+		float upDownMovementSpeed = 2;
 
 		float mouseSens = 0.1f;
 

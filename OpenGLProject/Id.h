@@ -4,7 +4,7 @@ namespace ecs
 {
 	enum class ComponentId
 	{
-		EMPTY, MESH, TRANSFORM, AXISALIGNEDBOX
+		EMPTY, MESH, TRANSFORM, SIZE, AXISALIGNEDBOX
 	};
 
 }

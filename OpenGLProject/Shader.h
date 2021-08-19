@@ -12,6 +12,7 @@
 
 namespace fwork
 {
+	// Set uniforms only after calling use()!
 	class Shader
 	{
 		const char* defaultVert = "#version 330 core\n"

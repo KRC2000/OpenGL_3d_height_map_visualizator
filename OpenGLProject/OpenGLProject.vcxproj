@@ -154,6 +154,8 @@
     <ClCompile Include="imgui_widgets.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshManager.cpp" />
+    <ClCompile Include="SizeComponent.cpp" />
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +181,7 @@
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SizeComponent.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TransformComponent.h" />
