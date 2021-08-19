@@ -8,28 +8,38 @@
 
 namespace ecs
 {
-	struct TransformComponent : public Component
+	class TransformComponent : public Component
 	{
-		glm::mat4 transform = glm::mat4(1);
+		glm::mat4 transform_mat = glm::mat4(1);
+		glm::mat4 translation_mat = glm::mat4(1);
+		glm::mat4 rotation_mat = glm::mat4(1);
+		glm::mat4 scale_mat = glm::mat4(1);
+	public:
 
 		TransformComponent()
 		{
 			Component::id = ecs::ComponentId::TRANSFORM;
 		}
 
+		glm::mat4 getTransform()
+		{
+			transform_mat = translation_mat * rotation_mat * scale_mat;
+			return transform_mat;
+		}
+
 		void move(float x, float y, float z)
 		{
-			transform = glm::translate(transform, glm::vec3(x, y, z));
+			translation_mat = glm::translate(translation_mat, glm::vec3(x, y, z));
 		}
 
 		void rotate(float angle, float rotAxisX, float rotAxisY, float rotAxisZ)
 		{
-			transform = glm::rotate(transform, angle, glm::vec3(rotAxisX, rotAxisY, rotAxisZ));
+			rotation_mat = glm::rotate(rotation_mat, angle, glm::vec3(rotAxisX, rotAxisY, rotAxisZ));
 		}
 
 		void scale(float factorX, float factorY, float factorZ)
 		{
-			transform = glm::scale(transform, glm::vec3(factorX, factorY, factorZ));
+			scale_mat = glm::scale(scale_mat, glm::vec3(factorX, factorY, factorZ));
 		}
 
 	};

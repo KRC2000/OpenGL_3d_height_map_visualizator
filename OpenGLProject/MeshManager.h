@@ -12,9 +12,13 @@
 
 #include "MeshComponent.h"
 #include "AlignedBox.h"
+#include "Vec3.h"
 
 namespace fwork
 {
+	/*
+	Loads obj file, saves as a new instance containing vertice, indices, etc. , buffers data
+	*/
 	class MeshManager
 	{
 		// name == path
@@ -24,13 +28,11 @@ namespace fwork
 			std::vector<float> vertices;
 			std::vector<unsigned int> indices;
 			std::string name;
-			std::string texPath;
-			bool texCoords;
-			//fwork::AlignedBox box;
+			std::string texFilePath;
+			bool isTextured;
+			Vec3 size;
 		};
 
-		/*std::vector<float> vertices;
-		std::vector<unsigned int> indices;*/
 
 		std::vector<Mesh> meshes;
 
@@ -43,22 +45,18 @@ namespace fwork
 		{
 			Mesh mesh;
 
-			/*vertices.clear();
-			indices.clear();*/
-
 			Assimp::Importer importer;
 			const aiScene* scene = getSceneObjectRef(path, importer);
 		
 		
-			loadVertsToVec(scene, mesh.vertices, mesh.texCoords);
+			loadVertsToVec(scene, mesh.vertices, mesh.isTextured);
 			loadIndicesToVec(scene, mesh.indices);
+			calculateMeshSize(mesh.size, mesh.vertices, (mesh.isTextured)? 2 : 0);
 
 			createAndLoadBuffers(mesh, mesh.vertices, mesh.indices);
 
 			mesh.name = path;
-			mesh.texPath = getTexturePath(scene);
-			//AlignedBox box2(vertices, 2);
-			//mesh.box = box2;
+			mesh.texFilePath = getTexturePath(scene);
 			
 			meshes.push_back(mesh);
 
@@ -70,12 +68,7 @@ namespace fwork
 			for (Mesh& mesh : meshes)
 			{
 				if (mesh.name == meshName)
-				{
-					mesh_c.VAO_id = mesh.VAO_id;
-					mesh_c.indicesAmount = mesh.indices.size();
-					mesh_c.textured = mesh.texCoords;
-					//mesh_c.box = mesh.box;
-				}
+					mesh_c.setUp(mesh.VAO_id, mesh.indices.size(), mesh.isTextured);
 			}
 		}
 
@@ -94,35 +87,29 @@ namespace fwork
 		{
 			for (Mesh& mesh : meshes)
 			{
-				if (mesh.name == meshName) return mesh.texPath;
+				if (mesh.name == meshName) return mesh.texFilePath;
 			}
 			std::cout << "MeshManager::Can't get mesh texture path, no mesh with such name\n";
 			return "";
 		}
 
 		// Returns vertices vector copy 
-		std::vector<float> getMeshVertices(std::string meshName)
+		const std::vector<float>& getMeshVertices(std::string meshName)
 		{
 			for (Mesh& mesh : meshes)
-			{
 				if (mesh.name == meshName) return mesh.vertices;
-			}
 		}
 
-		/*unsigned int getMeshIndicesAmount(std::string meshName)
+		std::vector<float> getMeshVerticesCopy(std::string meshName)
 		{
 			for (Mesh& mesh : meshes)
-			{
-				if (mesh.name == meshName) return mesh.indicesAmount;
-			}
-			std::cout << "MeshManager::Can't get indices amount, no mesh with such name\n";
-			return 0;
-		}*/
+				if (mesh.name == meshName) return mesh.vertices;
+		}
 
-		// Returns vector copy!
-		//std::vector<float> getLastLoadedVertices() { return vertices; }
 
 	private:
+		// Param "offset" - how much data between vertices position data(for example, texture coordinates offset = 2)
+		void calculateMeshSize(Vec3& size, const std::vector<float>& vertices, unsigned int offset = 0);
 
 		// Loads mesh file in aiScene - assimp structure
 		const aiScene* getSceneObjectRef(std::string path, Assimp::Importer& importer)
@@ -200,11 +187,11 @@ namespace fwork
 			glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO_id);
 			glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
-			if (!mesh.texCoords) glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+			if (!mesh.isTextured) glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 			else glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 			glEnableVertexAttribArray(0);
 
-			if (mesh.texCoords)
+			if (mesh.isTextured)
 			{
 				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 				glEnableVertexAttribArray(1);

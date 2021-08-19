@@ -10,30 +10,28 @@
 
 namespace ecs
 {
-	struct MeshComponent : public Component
+	class MeshComponent : public Component
 	{
-	private:	
 		unsigned int texture_id = 0;
-		unsigned int boxVBO, boxVAO;
-	public:
 		unsigned int VAO_id;
 		unsigned int indicesAmount;
-		bool textured = false;
-		fwork::AlignedBox box;
+		bool isTextured = false;
+	public:
 
-		MeshComponent()
+		MeshComponent() { Component::id = ecs::ComponentId::MESH; }
+
+		void setUp(unsigned int vao, unsigned int indicesAmount, bool isTextured)
 		{
-			Component::id = ecs::ComponentId::MESH;
+			this->VAO_id = vao;
+			this->indicesAmount = indicesAmount;
+			this->isTextured = isTextured;
 		}
 
-		void setTexture(unsigned int textureId)
-		{
-			texture_id = textureId;
-		}
+		void setTexture(unsigned int textureId) { texture_id = textureId; }
 
 		void draw()
 		{
-			if (textured)
+			if (isTextured)
 			{
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, texture_id);
@@ -42,27 +40,6 @@ namespace ecs
 			glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
 			glBindVertexArray(0);
 
-		}
-
-		void setupDebagDraw()
-		{
-			glGenVertexArrays(1, &boxVAO);
-			glBindVertexArray(boxVAO);
-
-			glGenBuffers(1, &boxVBO);
-			glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
-			glBufferData(GL_ARRAY_BUFFER, box.getVertices().size() * sizeof(float), &box.getVertices()[0], GL_STATIC_DRAW); 
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-			glEnableVertexAttribArray(0);
-
-			glBindVertexArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-		}
-
-		void debugDraw()
-		{
-			glBindVertexArray(boxVAO);
-			glDrawArrays(GL_LINE_STRIP, 0, box.getVertices().size()/3);
 		}
 
 	};
