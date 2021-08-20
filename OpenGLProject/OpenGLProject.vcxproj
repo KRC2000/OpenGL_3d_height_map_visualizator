@@ -155,12 +155,14 @@
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MeshManager.cpp" />
+    <ClCompile Include="MousePicker.cpp" />
     <ClCompile Include="SizeComponent.cpp" />
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AlignedBox.h" />
     <ClInclude Include="AxisAlignedBoxComponent.h" />
+    <ClInclude Include="ObjectBP.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ECSManager.h" />
@@ -179,9 +181,11 @@
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="MeshComponent.h" />
     <ClInclude Include="MeshManager.h" />
+    <ClInclude Include="MousePicker.h" />
     <ClInclude Include="OBJ_Loader.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SizeComponent.h" />
+    <ClInclude Include="SphereComponent.h" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TransformComponent.h" />

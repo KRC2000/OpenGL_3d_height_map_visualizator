@@ -27,9 +27,25 @@ namespace ecs
 			return transform_mat;
 		}
 
+		glm::vec3 getPos()
+		{
+			glm::vec4 vec = translation_mat * glm::vec4(0, 0, 0, 1);
+			return glm::vec3(vec.x, vec.y, vec.z);
+		}
+
 		void move(float x, float y, float z)
 		{
 			translation_mat = glm::translate(translation_mat, glm::vec3(x, y, z));
+		}
+
+		void setPos(float x, float y, float z)
+		{
+			translation_mat = glm::translate(glm::mat4(1), glm::vec3(x, y, z));
+		}
+
+		void setPos(glm::vec3 vec)
+		{
+			translation_mat = glm::translate(glm::mat4(1), vec);
 		}
 
 		void rotate(float angle, float rotAxisX, float rotAxisY, float rotAxisZ)

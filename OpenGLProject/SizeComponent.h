@@ -15,11 +15,11 @@ namespace ecs
 {
 	class SizeComponent: public Component
 	{
-		fwork::Vec3 size;
+		glm::vec3 size;
 	public:
 		SizeComponent() { Component::id = ecs::ComponentId::SIZE; }
 
-		void recalculateSize(const std::vector<float>& vertices, TransformComponent* trans_c, unsigned int offset = 0);
-		fwork::Vec3 getSize() { return size; }
+		void recalculateSize(const std::vector<float>& vertices, TransformComponent& trans_c, unsigned int offset = 0);
+		glm::vec3 getSize() { return size; }
 	};
 }

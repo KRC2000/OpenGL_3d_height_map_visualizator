@@ -13,26 +13,29 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Shaders">
-      <UniqueIdentifier>{6e95a22d-a86b-48d2-a330-9e374530b312}</UniqueIdentifier>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{14779138-f7ad-4b86-9d14-1e9b10fe0e80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ImGUI">
-      <UniqueIdentifier>{bb3ebedc-8805-4a7f-9da6-5b165339432b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shaders\NormalDrawing">
-      <UniqueIdentifier>{9bfa0aa0-e776-4792-9644-b21661a59e63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="3rdPartUtility">
+    <Filter Include="Engine\3rdPartUtility">
       <UniqueIdentifier>{25525085-e16c-449c-8785-e126d2903181}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework">
+    <Filter Include="Engine\3rdPartUtility\ImGUI">
+      <UniqueIdentifier>{bb3ebedc-8805-4a7f-9da6-5b165339432b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Framework">
       <UniqueIdentifier>{3888440e-d904-4753-8849-e5915234dd01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\ECS">
+    <Filter Include="Engine\Framework\ECS">
       <UniqueIdentifier>{c02a0b7e-c946-4866-ae51-ac7f3a1287d7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Framework\ECS\Components">
+    <Filter Include="Engine\Framework\ECS\Components">
       <UniqueIdentifier>{c1fe5e79-48aa-47bd-96ac-9962281a1f45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders">
+      <UniqueIdentifier>{6e95a22d-a86b-48d2-a330-9e374530b312}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shaders\NormalDrawing">
+      <UniqueIdentifier>{9bfa0aa0-e776-4792-9644-b21661a59e63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -40,40 +43,43 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="STB_IMAGE_IMPLEMENTATION.cpp">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClCompile>
     <ClCompile Include="imgui.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_demo.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_draw.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_glfw.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_impl_opengl3.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_tables.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="imgui_widgets.cpp">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="lodepng.cpp">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClCompile>
     <ClCompile Include="MeshManager.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClCompile>
     <ClCompile Include="SizeComponent.cpp">
-      <Filter>Framework\ECS\Components</Filter>
+      <Filter>Engine\Framework\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MousePicker.cpp">
+      <Filter>Engine\Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -81,102 +87,111 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClInclude>
     <ClInclude Include="imconfig.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imgui.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_glfw.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_opengl3.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imgui_internal.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_rectpack.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_textedit.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="imstb_truetype.h">
-      <Filter>ImGUI</Filter>
+      <Filter>Engine\3rdPartUtility\ImGUI</Filter>
     </ClInclude>
     <ClInclude Include="OBJ_Loader.h">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="HeightMap.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="lodepng.h">
-      <Filter>3rdPartUtility</Filter>
+      <Filter>Engine\3rdPartUtility</Filter>
     </ClInclude>
     <ClInclude Include="MeshManager.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="ECSManager.h">
-      <Filter>Framework\ECS</Filter>
+      <Filter>Engine\Framework\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
-      <Filter>Framework\ECS</Filter>
+      <Filter>Engine\Framework\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Framework\ECS</Filter>
+      <Filter>Engine\Framework\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Id.h">
-      <Filter>Framework\ECS</Filter>
+      <Filter>Engine\Framework\ECS</Filter>
     </ClInclude>
     <ClInclude Include="AlignedBox.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="Vec3.h">
-      <Filter>Framework</Filter>
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
     <ClInclude Include="TransformComponent.h">
-      <Filter>Framework\ECS\Components</Filter>
+      <Filter>Engine\Framework\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="MeshComponent.h">
-      <Filter>Framework\ECS\Components</Filter>
+      <Filter>Engine\Framework\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="AxisAlignedBoxComponent.h">
-      <Filter>Framework\ECS\Components</Filter>
+      <Filter>Engine\Framework\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="SizeComponent.h">
-      <Filter>Framework\ECS\Components</Filter>
+      <Filter>Engine\Framework\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="MousePicker.h">
+      <Filter>Engine\Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereComponent.h">
+      <Filter>Engine\Framework\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectBP.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\3.3.heightmap_normal.frag">
-      <Filter>Shaders\NormalDrawing</Filter>
+      <Filter>Engine\Shaders\NormalDrawing</Filter>
     </None>
     <None Include="Shaders\3.3.heightmap_normal.geom">
-      <Filter>Shaders\NormalDrawing</Filter>
+      <Filter>Engine\Shaders\NormalDrawing</Filter>
     </None>
     <None Include="Shaders\3.3.heightmap_normal.vert">
-      <Filter>Shaders\NormalDrawing</Filter>
+      <Filter>Engine\Shaders\NormalDrawing</Filter>
     </None>
     <None Include="Shaders\3.3.heightmap.frag">
-      <Filter>Shaders</Filter>
+      <Filter>Engine\Shaders</Filter>
     </None>
     <None Include="Shaders\3.3.heightmap.geom">
-      <Filter>Shaders</Filter>
+      <Filter>Engine\Shaders</Filter>
     </None>
     <None Include="Shaders\3.3.heightmap.vert">
-      <Filter>Shaders</Filter>
+      <Filter>Engine\Shaders</Filter>
     </None>
   </ItemGroup>
 </Project>

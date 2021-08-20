@@ -68,7 +68,7 @@ namespace fwork
 			for (Mesh& mesh : meshes)
 			{
 				if (mesh.name == meshName)
-					mesh_c.setUp(mesh.VAO_id, mesh.indices.size(), mesh.isTextured);
+					mesh_c.setUp(mesh.VAO_id, mesh.indices.size(), mesh.vertices , mesh.isTextured);
 			}
 		}
 

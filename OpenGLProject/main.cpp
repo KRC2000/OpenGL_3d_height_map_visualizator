@@ -18,15 +18,20 @@
 #include "HeightMap.h"
 #include "MeshManager.h"
 #include "TextureManager.h"
+#include "MousePicker.h"
 
-#include "Entity.h"
-#include "ECSManager.h"
-#include "MeshComponent.h"
-#include "TransformComponent.h"
-#include "SizeComponent.h"
+//#include "Entity.h"
+//#include "ECSManager.h"
+//#include "MeshComponent.h"
+//#include "TransformComponent.h"
+//#include "SizeComponent.h"
 //#include "AxisAlignedBoxComponent.h"
 
 #include "GlobalVars.h"
+
+
+
+#include "ObjectBP.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -94,6 +99,7 @@ int main()
 
 	meshManager.loadMesh(resDir + "barrel.obj");
 	meshManager.loadMesh(resDir + "desk.obj");
+	meshManager.loadMesh(resDir + "sphere.obj");
 
 	barrelVertices = &meshManager.getMeshVertices(resDir + "barrel.obj");
 	deskVertices = &meshManager.getMeshVertices(resDir + "desk.obj");
@@ -103,7 +109,7 @@ int main()
 	texManager.loadTexture(barrel_t_path);
 	texManager.loadTexture(desk_t_path);
 
-
+	/*
 	ecs::ECSManager ecsManager;
 
 	std::vector<Entity*> entities;
@@ -114,7 +120,7 @@ int main()
 	meshManager.setUpMeshComponent(*desk->getComponent<ecs::MeshComponent>(), resDir + "desk.obj");
 	desk->getComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(desk_t_path));
 	desk->addComponent(ecsManager.newComponent(new ecs::TransformComponent()));
-	desk->getComponent<ecs::TransformComponent>()->scale(2, 1.5, 2);
+	desk->getComponent<ecs::TransformComponent>()->scale(3.5, 3, 3.5);
 	desk->addComponent(ecsManager.newComponent(new ecs::SizeComponent()));
 	desk->getComponent<ecs::SizeComponent>()->recalculateSize(*deskVertices, desk->getComponent<ecs::TransformComponent>(), 2);
 	fwork::Vec3 deskSize = desk->getComponent<ecs::SizeComponent>()->getSize();
@@ -131,20 +137,33 @@ int main()
 		meshManager.setUpMeshComponent(*entity->getComponent<ecs::MeshComponent>(), resDir + "barrel.obj");
 		entity->getComponent<ecs::MeshComponent>()->setTexture(texManager.getTexture(barrel_t_path));
 
-		entity->getComponent<ecs::TransformComponent>()->scale(1, 1 + (rand() % 20)/10.f, 1);
 
 		entity->getComponent<ecs::SizeComponent>()->recalculateSize(*barrelVertices, entity->getComponent<ecs::TransformComponent>(), 2);
 		fwork::Vec3 barrelSize = entity->getComponent<ecs::SizeComponent>()->getSize();
-		entity->getComponent<ecs::TransformComponent>()->move(-barrelSize.x * (i-1) , deskSize.y/2.f + barrelSize.y/2.f , 0);
+		entity->getComponent<ecs::TransformComponent>()->move(-(barrelSize.x + 0.5) * (i-1) , deskSize.y/2.f + barrelSize.y/2.f , 0);
 
 		entities.push_back(entity);
 	}
 	
 	entities.push_back(desk);
+	*/
 	
-	
-	
-	//std::cout << s.x << "  " << s.y << "  " << s.z;
+	ObjectBP desk;
+	meshManager.setUpMeshComponent(desk.mesh_c, resDir + "desk.obj");
+	desk.mesh_c.setTexture(texManager.getTexture(desk_t_path));
+	desk.transform_c.scale(3, 2, 3);
+	desk.size_c.recalculateSize(desk.mesh_c.getVerticesRef(), desk.transform_c, 2);
+
+	std::vector<ObjectBP> barrels;
+	for (int i = 0; i < 3; i++)
+	{
+		ObjectBP barrel;
+		meshManager.setUpMeshComponent(barrel.mesh_c, resDir + "barrel.obj");
+		barrel.mesh_c.setTexture(texManager.getTexture(barrel_t_path));
+		barrel.size_c.recalculateSize(barrel.mesh_c.getVerticesRef(), barrel.transform_c, 2);
+		barrel.transform_c.setPos(-(barrel.size_c.getSize().x + 1) * (i-1), desk.transform_c.getPos().y + desk.size_c.getSize().y / 2 + barrel.size_c.getSize().y / 2, 0);
+		barrels.push_back(barrel);
+	}
 
 
 	// Setup Dear ImGui context
@@ -167,6 +186,7 @@ int main()
 
 	glfwSwapInterval(0);
 
+	fwork::MousePicker picker;
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -178,7 +198,7 @@ int main()
 		// -----
 		processInput(window);
 
-
+		//picker.update(*window, cam);
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -196,21 +216,34 @@ int main()
 
 		shader.use();
 		cam.applyCamera(shader.ID);
-		shader.setInt("tex", 0);
-		shader.setBool("textured", true);
-
 		
+		for (ObjectBP& barrel : barrels)
+		{
+			barrel.mesh_c.draw(shader, barrel.transform_c);
+		}
+
+		desk.mesh_c.draw(shader, desk.transform_c);
+
+
+		glm::vec3 point = picker.getPlaneIntersection(cam, *window, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+		//std::cout << point.x << "  " << point.y << "  " << point.z << std::endl;
+		desk.transform_c.setPos(point);
+
+	
+		/*
 		for (Entity* entity : entities)
 		{
 			shader.use();
 			shader.setMat4("model_mat4", entity->getComponent<ecs::TransformComponent>()->getTransform());
+			entity->getComponent<ecs::TransformComponent>()->setPos(picker.getPointOnRay(cam, *window, 3));
 			entity->getComponent<ecs::MeshComponent>()->draw();
 
 
 		}
 
-	
-
+		shader.setMat4("model_mat4", desk->getComponent<ecs::TransformComponent>()->getTransform());
+		desk->getComponent<ecs::MeshComponent>()->draw();
+		*/
 
 		// Render dear imgui into screen
 		ImGui::Render();
@@ -272,7 +305,10 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+	/*double x, y;
+	glfwGetCursorPos(window, &x, &y);*/
 	cam.mouseViewOrient(xpos, ypos);
+	std::cout << xpos << "  " << ypos << std::endl;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -283,6 +319,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 			cam.setMouseLook((glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? false : true);
+			/*if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
+			{
+				int scrW, scrH;
+				glfwGetWindowSize(window, &scrW, &scrH);
+				glfwSetCursorPos(window, scrW / 2, scrH / 2);
+			}*/
+
+
 			(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ?
 				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse : ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
 		}

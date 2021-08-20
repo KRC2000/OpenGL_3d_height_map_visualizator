@@ -18,7 +18,7 @@ namespace fwork
 		glm::mat4 projection_mat = glm::mat4(1);
 
 
-		float pitch = 0, yaw = -90.f;
+		float pitch = 0, yaw = -70.f;
 		float lastX = SCR_WIDTH / 2, lastY = SCR_HEIGHT / 2;
 
 
@@ -31,10 +31,10 @@ namespace fwork
 
 		bool firstMouseInput = true;
 	public:
-		glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+		glm::vec3 cameraPos = glm::vec3(0.0f, 4.0f, 4.0f);
 		glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 		glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-	public:
+	
 		Camera()
 		{
 
@@ -116,6 +116,9 @@ namespace fwork
 		};
 
 		void setMouseLook(bool mouselook) { this->mouselook = mouselook; if (mouselook == false) firstMouseInput = true; }
+
+		glm::mat4 getProjectionMat() { return projection_mat; }
+		glm::mat4 getViewMat() { return view_mat; }
 	};
 }
 

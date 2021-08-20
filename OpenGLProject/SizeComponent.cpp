@@ -1,12 +1,12 @@
 #include "SizeComponent.h"
 
-void ecs::SizeComponent::recalculateSize(const std::vector<float>& vertices, TransformComponent* trans_c, unsigned int offset)
+void ecs::SizeComponent::recalculateSize(const std::vector<float>& vertices, TransformComponent& trans_c, unsigned int offset)
 {
 	std::vector<float> transVertices;
 	for (int i = 0; i < vertices.size(); i+=3 + offset)
 	{
 		//glm::vec4 vert = trans_c->getTransform() * glm::vec4(vertices[i], vertices[i+1], vertices[i+2], 1.f);
-		glm::vec4 vert = /*trans_c->translation_mat **/ trans_c->rotation_mat * trans_c->scale_mat * glm::vec4(vertices[i], vertices[i+1], vertices[i+2], 1.f);
+		glm::vec4 vert = /*trans_c->translation_mat **/ trans_c.rotation_mat * trans_c.scale_mat * glm::vec4(vertices[i], vertices[i+1], vertices[i+2], 1.f);
 
 		transVertices.push_back(vert.x);
 		transVertices.push_back(vert.y);
@@ -27,6 +27,4 @@ void ecs::SizeComponent::recalculateSize(const std::vector<float>& vertices, Tra
 	size.x= maxX - minX;
 	size.y = maxY - minY;
 	size.z = maxZ - minZ;
-
-	std::cout << maxY << std::endl;
 }
