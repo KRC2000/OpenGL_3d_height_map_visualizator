@@ -162,6 +162,7 @@
   <ItemGroup>
     <ClInclude Include="AlignedBox.h" />
     <ClInclude Include="AxisAlignedBoxComponent.h" />
+    <ClInclude Include="BarrelBP.h" />
     <ClInclude Include="ObjectBP.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Component.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="MeshManager.h" />
     <ClInclude Include="MousePicker.h" />
     <ClInclude Include="OBJ_Loader.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="SizeComponent.h" />
     <ClInclude Include="SphereComponent.h" />

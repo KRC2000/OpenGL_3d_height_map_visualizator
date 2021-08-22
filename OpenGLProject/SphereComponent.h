@@ -2,19 +2,35 @@
 
 #include <glad/glad.h>
 
+#include <glm/glm.hpp>
+
+#include "MeshComponent.h"
+#include "TransformComponent.h"
+
 namespace ecs
 {
 	class SphereComponent
 	{
-		unsigned int vao;
-		unsigned int indicesAmount;
+		glm::vec3 centerPos{ 0, 0, 0 };
+		float radius = 1;
+		TransformComponent transform_c;
 	public:
-
-		void draw()
+		MeshComponent mesh_c;
+		
+		void setCenterPos(glm::vec3 newPos)
 		{
-			glBindVertexArray(vao);
-			glDrawElements(GL_TRIANGLES, indicesAmount, GL_UNSIGNED_INT, 0);
-			glBindVertexArray(0);
+			centerPos = newPos;
+			transform_c.setPos(newPos);
 		}
+
+		void setRadius(float newRadius)
+		{
+			radius = newRadius;
+			transform_c.setScale(radius, radius, radius);
+		}
+
+		glm::mat4 getTransform() { return transform_c.getTransform(); }
+		float getRadius() { return radius; }
+		glm::vec3 getCenterPos() { return centerPos; }
 	};
 }

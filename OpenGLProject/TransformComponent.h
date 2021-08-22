@@ -21,7 +21,7 @@ namespace ecs
 			Component::id = ecs::ComponentId::TRANSFORM;
 		}
 
-		glm::mat4 getTransform()
+		glm::mat4 getTransform() 
 		{
 			transform_mat = translation_mat * rotation_mat * scale_mat;
 			return transform_mat;
@@ -58,5 +58,9 @@ namespace ecs
 			scale_mat = glm::scale(scale_mat, glm::vec3(factorX, factorY, factorZ));
 		}
 
+		void setScale(float factorX, float factorY, float factorZ)
+		{
+			scale_mat = glm::scale(glm::mat4(1), glm::vec3(factorX, factorY, factorZ));
+		}
 	};
 }

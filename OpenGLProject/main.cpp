@@ -15,6 +15,7 @@
 
 #include "Shader.h"
 #include "Camera.h"
+#include "Renderer.h"
 #include "HeightMap.h"
 #include "MeshManager.h"
 #include "TextureManager.h"
@@ -32,6 +33,7 @@
 
 
 #include "ObjectBP.h"
+#include "BarrelBP.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -154,14 +156,20 @@ int main()
 	desk.transform_c.scale(3, 2, 3);
 	desk.size_c.recalculateSize(desk.mesh_c.getVerticesRef(), desk.transform_c, 2);
 
-	std::vector<ObjectBP> barrels;
+	std::vector<BarrelBP> barrels;
 	for (int i = 0; i < 3; i++)
 	{
-		ObjectBP barrel;
+		
+
+		BarrelBP barrel;
 		meshManager.setUpMeshComponent(barrel.mesh_c, resDir + "barrel.obj");
 		barrel.mesh_c.setTexture(texManager.getTexture(barrel_t_path));
 		barrel.size_c.recalculateSize(barrel.mesh_c.getVerticesRef(), barrel.transform_c, 2);
 		barrel.transform_c.setPos(-(barrel.size_c.getSize().x + 1) * (i-1), desk.transform_c.getPos().y + desk.size_c.getSize().y / 2 + barrel.size_c.getSize().y / 2, 0);
+		meshManager.setUpMeshComponent(barrel.sphere_c.mesh_c, resDir + "sphere.obj");
+		barrel.sphere_c.setCenterPos(barrel.transform_c.getPos());
+		barrel.sphere_c.setRadius(2);
+		
 		barrels.push_back(barrel);
 	}
 
@@ -187,6 +195,7 @@ int main()
 	glfwSwapInterval(0);
 
 	fwork::MousePicker picker;
+	fwork::Renderer renderer;
 	// render loop
 	// -----------
 	while (!glfwWindowShouldClose(window))
@@ -198,7 +207,7 @@ int main()
 		// -----
 		processInput(window);
 
-		//picker.update(*window, cam);
+
 		// render
 		// ------
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -211,25 +220,37 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		//map.draw(cam);
-		//mesh->draw(shader, cam);
 
 		shader.use();
 		cam.applyCamera(shader.ID);
 		
-		for (ObjectBP& barrel : barrels)
+		for (BarrelBP& barrel : barrels)
 		{
-			barrel.mesh_c.draw(shader, barrel.transform_c);
+			renderer.draw(barrel.mesh_c, shader, barrel.transform_c.getTransform());
+			renderer.setWireframeMode(true);
+			renderer.draw(barrel.sphere_c.mesh_c, shader, barrel.sphere_c.getTransform());
+			renderer.setWireframeMode(false);
+
 		}
 
-		desk.mesh_c.draw(shader, desk.transform_c);
-
-
-		glm::vec3 point = picker.getPlaneIntersection(cam, *window, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		//std::cout << point.x << "  " << point.y << "  " << point.z << std::endl;
-		desk.transform_c.setPos(point);
+		renderer.draw(desk.mesh_c, shader, desk.transform_c.getTransform());
 
 	
+
+		
+		ecs::SphereComponent* sphere = &barrels.at(0).sphere_c;
+
+		glm::vec3 point;
+
+		// point = picker.getPlaneIntersection(cam, *window, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+
+		if (picker.getSphereIntersection(cam, *window, sphere->getCenterPos(), sphere->getRadius(), point))
+		{
+			desk.transform_c.setPos(point);
+		}
+		//desk.transform_c.setPos(point);
+
+
 		/*
 		for (Entity* entity : entities)
 		{
@@ -305,10 +326,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
-	/*double x, y;
-	glfwGetCursorPos(window, &x, &y);*/
 	cam.mouseViewOrient(xpos, ypos);
-	std::cout << xpos << "  " << ypos << std::endl;
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -319,13 +337,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		{
 			glfwSetInputMode(window, GLFW_CURSOR, (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? GLFW_CURSOR_DISABLED : GLFW_CURSOR_NORMAL);
 			cam.setMouseLook((glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ? false : true);
-			/*if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
-			{
-				int scrW, scrH;
-				glfwGetWindowSize(window, &scrW, &scrH);
-				glfwSetCursorPos(window, scrW / 2, scrH / 2);
-			}*/
-
 
 			(glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL) ?
 				ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse : ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;

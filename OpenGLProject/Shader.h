@@ -44,7 +44,7 @@ namespace fwork
 			"		if (color.a == 0) discard;\n"
 			"		FragColor = color; \n"
 			"	}\n"
-			"	if (!textured) FragColor = vec4(0.0f, 0.0f, 0.0f, 1.0f);\n"
+			"	if (!textured) FragColor = vec4(0.5f, 0.5f, 0.5f, 1.f);\n"
 			"}\n\0";
 	public:
 		unsigned int ID;
