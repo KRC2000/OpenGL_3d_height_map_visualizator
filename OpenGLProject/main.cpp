@@ -158,6 +158,7 @@ int main()
 	desk.transform_c.scale(3, 2, 3);
 	desk.size_c.recalculateSize(desk.mesh_c.getVerticesRef(), desk.transform_c, 2);
 
+
 	std::vector<BarrelBP> barrels;
 	for (int i = 0; i < 3; i++)
 	{
@@ -233,26 +234,10 @@ int main()
 		{
 			barrel.update();
 			renderer.draw(barrel.mesh_c, shader, barrel.transform_c.getTransform());
-			renderer.draw(barrel.sphere_c.mesh_c, shader, barrel.sphere_c.getTransform());
+			//renderer.draw(barrel.sphere_c.mesh_c, shader, barrel.sphere_c.getTransform());
 		}
 
 		renderer.draw(desk.mesh_c, shader, desk.transform_c.getTransform());
-
-	
-
-		
-		ecs::SphereComponent* sphere = &barrels.at(0).sphere_c;
-		glm::vec3 point;
-
-		
-
-		// point = picker.getPlaneIntersection(cam, *window, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-		if (fwork::MousePicker::getSphereIntersection(cam, *window, sphere->getCenterPos(), sphere->getRadius(), point))
-		{
-			desk.transform_c.setPos(point);
-		}
-		//desk.transform_c.setPos(point);
 
 
 

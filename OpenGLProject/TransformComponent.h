@@ -11,6 +11,8 @@ namespace ecs
 	class TransformComponent : public Component
 	{
 		glm::mat4 transform_mat = glm::mat4(1);
+		//glm::vec3 rotationOrigin{0, 0, 0};
+		glm::mat4 rotationOrigin_mat = glm::mat4(1);
 	public:
 		glm::mat4 translation_mat = glm::mat4(1);
 		glm::mat4 rotation_mat = glm::mat4(1);
@@ -23,7 +25,10 @@ namespace ecs
 
 		glm::mat4 getTransform() 
 		{
-			transform_mat = translation_mat * rotation_mat * scale_mat;
+			//glm::mat4 rotation_mat_temp = glm::translate(rotation_mat, glm::vec3(-2, 0, 0));
+			//transform_mat = translation_mat * rotation_mat * scale_mat;
+			//transform_mat = translation_mat * (glm::translate(rotation_mat, rotationOrigin)) * scale_mat;
+			transform_mat = translation_mat * (glm::inverse(rotationOrigin_mat) * rotation_mat * rotationOrigin_mat) * scale_mat;
 			return transform_mat;
 		}
 
@@ -61,6 +66,12 @@ namespace ecs
 		void setScale(float factorX, float factorY, float factorZ)
 		{
 			scale_mat = glm::scale(glm::mat4(1), glm::vec3(factorX, factorY, factorZ));
+		}
+
+		void setRotationOrigin(float offsetX, float offsetY, float offsetZ)
+		{
+			rotationOrigin_mat = glm::translate(glm::mat4(1), glm::vec3(-offsetX,-offsetY, -offsetZ));
+			//rotationOrigin = glm::vec3(offsetX, offsetY, offsetZ);
 		}
 	};
 }
