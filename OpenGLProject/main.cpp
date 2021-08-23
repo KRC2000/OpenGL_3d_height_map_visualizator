@@ -19,6 +19,7 @@
 #include "HeightMap.h"
 #include "MeshManager.h"
 #include "TextureManager.h"
+#include "InputManager.h"
 #include "MousePicker.h"
 
 //#include "Entity.h"
@@ -37,10 +38,11 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow* window);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
+void processInput(GLFWwindow* window);
 
 
 float deltaTime = 0.0f;	// Time between current frame and last frame
@@ -168,7 +170,7 @@ int main()
 		barrel.transform_c.setPos(-(barrel.size_c.getSize().x + 1) * (i-1), desk.transform_c.getPos().y + desk.size_c.getSize().y / 2 + barrel.size_c.getSize().y / 2, 0);
 		meshManager.setUpMeshComponent(barrel.sphere_c.mesh_c, resDir + "sphere.obj");
 		barrel.sphere_c.setCenterPos(barrel.transform_c.getPos());
-		barrel.sphere_c.setRadius(2);
+		barrel.sphere_c.setRadius(1.5);
 		
 		barrels.push_back(barrel);
 	}
@@ -189,12 +191,15 @@ int main()
 	/*glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
+	//fwork::InputManager inputManager;
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, fwork::InputManager::mouse_button_callback);
 
 	glfwSwapInterval(0);
 
-	fwork::MousePicker picker;
+	fwork::InputManager::generateKeys();
+	fwork::MousePicker::bindWindowCamera(*window, cam);
 	fwork::Renderer renderer;
 	// render loop
 	// -----------
@@ -226,11 +231,9 @@ int main()
 		
 		for (BarrelBP& barrel : barrels)
 		{
+			barrel.update();
 			renderer.draw(barrel.mesh_c, shader, barrel.transform_c.getTransform());
-			renderer.setWireframeMode(true);
 			renderer.draw(barrel.sphere_c.mesh_c, shader, barrel.sphere_c.getTransform());
-			renderer.setWireframeMode(false);
-
 		}
 
 		renderer.draw(desk.mesh_c, shader, desk.transform_c.getTransform());
@@ -239,32 +242,21 @@ int main()
 
 		
 		ecs::SphereComponent* sphere = &barrels.at(0).sphere_c;
-
 		glm::vec3 point;
+
+		
 
 		// point = picker.getPlaneIntersection(cam, *window, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 
-		if (picker.getSphereIntersection(cam, *window, sphere->getCenterPos(), sphere->getRadius(), point))
+		if (fwork::MousePicker::getSphereIntersection(cam, *window, sphere->getCenterPos(), sphere->getRadius(), point))
 		{
 			desk.transform_c.setPos(point);
 		}
 		//desk.transform_c.setPos(point);
 
 
-		/*
-		for (Entity* entity : entities)
-		{
-			shader.use();
-			shader.setMat4("model_mat4", entity->getComponent<ecs::TransformComponent>()->getTransform());
-			entity->getComponent<ecs::TransformComponent>()->setPos(picker.getPointOnRay(cam, *window, 3));
-			entity->getComponent<ecs::MeshComponent>()->draw();
 
-
-		}
-
-		shader.setMat4("model_mat4", desk->getComponent<ecs::TransformComponent>()->getTransform());
-		desk->getComponent<ecs::MeshComponent>()->draw();
-		*/
+		fwork::InputManager::update();
 
 		// Render dear imgui into screen
 		ImGui::Render();
@@ -343,5 +335,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		}
 	}
 
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		std::cout << "boobs";
 }
 

@@ -81,6 +81,9 @@
     <ClCompile Include="MousePicker.cpp">
       <Filter>Engine\Framework</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Engine\Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GlobalVars.h">
@@ -178,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="BarrelBP.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Engine\Framework</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

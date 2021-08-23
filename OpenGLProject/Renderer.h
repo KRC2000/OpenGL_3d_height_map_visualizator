@@ -20,6 +20,7 @@ namespace fwork
 		void draw(ecs::MeshComponent& mesh_c, fwork::Shader& shader, glm::mat4 transform)
 		{
 			shader.setMat4("model_mat4", transform);
+			shader.setVec3("meshColor", mesh_c.getColor());
 			if (mesh_c.isTextured())
 			{
 				glActiveTexture(GL_TEXTURE0);
@@ -39,6 +40,7 @@ namespace fwork
 		// Draws mesh with texture at (0, 0, 0)(no transform applied)
 		void draw(ecs::MeshComponent& mesh_c, fwork::Shader& shader)
 		{
+			shader.setVec3("meshColor", mesh_c.getColor());
 			if (mesh_c.isTextured())
 			{
 				glActiveTexture(GL_TEXTURE0);

@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <glm/glm.hpp>
+
 #include "Component.h"
 #include "Id.h"
 
@@ -16,6 +18,7 @@ namespace ecs
 		unsigned int VAO_id;
 		unsigned int indicesAmount;
 		bool istextured = false;
+		glm::vec3 color{1.f, 1.f, 1.f};
 
 		const std::vector<float>* verticesPtr;
 
@@ -24,11 +27,14 @@ namespace ecs
 		MeshComponent() { Component::id = ecs::ComponentId::MESH; }
 
 		void setTexture(unsigned int textureId) { texture_id = textureId; }
+		void setColor(glm::vec3 newColor) { color = newColor; }
+
 		bool isTextured() { return istextured; }
 		unsigned int getTexture() { return texture_id; }
 		unsigned int getVAO() { return VAO_id; }
 		unsigned int getIndicesAmount() { return indicesAmount; }
 		const std::vector<float>& getVerticesRef() { return *verticesPtr; }
+		glm::vec3 getColor() { return color; }
 
 		void setUp(unsigned int vao, unsigned int indicesAmount, const std::vector<float>& vertices ,bool isTextured)
 		{
